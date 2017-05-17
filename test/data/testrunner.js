@@ -35,7 +35,7 @@ QUnit.assert.expectJqData = function( env, elems, key ) {
 		if ( elems.jquery && elems.toArray ) {
 			elems = elems.toArray();
 		}
-		if ( !supportjQuery.isArray( elems ) ) {
+		if ( !Array.isArray( elems ) ) {
 			elems = [ elems ];
 		}
 
@@ -166,6 +166,9 @@ QUnit.testDone( function() {
 
 	// ...even if the jQuery under test has a broken .empty()
 	supportjQuery( "#qunit-fixture" ).empty();
+
+	// Remove the iframe fixture
+	supportjQuery( "#qunit-fixture-iframe" ).remove();
 
 	// Reset internal jQuery state
 	jQuery.event.global = {};

@@ -249,7 +249,7 @@ QUnit.module( "ajax", {
 				"Nullable": null,
 				"undefined": undefined
 
-				// Support: IE 9 - 11, Edge 12 - 13+
+				// Support: IE 9 - 11, Edge 12 - 14 only
 				// Not all browsers allow empty-string headers
 				//"Empty": ""
 			},
@@ -2324,6 +2324,17 @@ if ( typeof window.ArrayBuffer === "undefined" || typeof new XMLHttpRequest().re
 		jQuery( "#first" ).load( "data/test3.html   #superuser ", function() {
 			assert.strictEqual( jQuery( this ).children( "div" ).length, 1, "Verify that specific elements were injected" );
 			QUnit.start();
+		} );
+	} );
+
+	// Selector should be trimmed to avoid leading spaces (#14773)
+	// Selector should include any valid non-HTML whitespace (#3003)
+	QUnit.test( "jQuery.fn.load( URL_SELECTOR with non-HTML whitespace(#3003) )", function( assert ) {
+		assert.expect( 1 );
+		var done = assert.async();
+		jQuery( "#first" ).load( "data/test3.html   #whitespace\\\\xA0 ", function() {
+			assert.strictEqual( jQuery( this ).children( "div" ).length, 1, "Verify that specific elements were injected" );
+			done();
 		} );
 	} );
 

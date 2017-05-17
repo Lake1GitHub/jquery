@@ -2,13 +2,14 @@ define( [
 	"./core",
 	"./var/document",
 	"./var/documentElement",
-	"./var/rnotwhite",
+	"./var/rnothtmlwhite",
 	"./var/slice",
 	"./data/var/dataPriv",
+	"./core/nodeName",
 
 	"./core/init",
 	"./selector"
-], function( jQuery, document, documentElement, rnotwhite, slice, dataPriv ) {
+], function( jQuery, document, documentElement, rnothtmlwhite, slice, dataPriv, nodeName ) {
 
 "use strict";
 
@@ -147,7 +148,7 @@ jQuery.event = {
 		}
 
 		// Handle multiple events separated by a space
-		types = ( types || "" ).match( rnotwhite ) || [ "" ];
+		types = ( types || "" ).match( rnothtmlwhite ) || [ "" ];
 		t = types.length;
 		while ( t-- ) {
 			tmp = rtypenamespace.exec( types[ t ] ) || [];
@@ -229,7 +230,7 @@ jQuery.event = {
 		}
 
 		// Once for each type.namespace in types; type may be omitted
-		types = ( types || "" ).match( rnotwhite ) || [ "" ];
+		types = ( types || "" ).match( rnothtmlwhite ) || [ "" ];
 		t = types.length;
 		while ( t-- ) {
 			tmp = rtypenamespace.exec( types[ t ] ) || [];
@@ -476,7 +477,7 @@ jQuery.event = {
 
 			// For checkbox, fire native event so checked state will be right
 			trigger: function() {
-				if ( this.type === "checkbox" && this.click && jQuery.nodeName( this, "input" ) ) {
+				if ( this.type === "checkbox" && this.click && nodeName( this, "input" ) ) {
 					this.click();
 					return false;
 				}
@@ -484,7 +485,7 @@ jQuery.event = {
 
 			// For cross-browser consistency, don't fire native .click() on links
 			_default: function( event ) {
-				return jQuery.nodeName( event.target, "a" );
+				return nodeName( event.target, "a" );
 			}
 		},
 

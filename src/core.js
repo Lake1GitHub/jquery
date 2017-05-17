@@ -172,11 +172,11 @@ jQuery.extend = jQuery.fn.extend = function() {
 
 				// Recurse if we're merging plain objects or arrays
 				if ( deep && copy && ( jQuery.isPlainObject( copy ) ||
-					( copyIsArray = jQuery.isArray( copy ) ) ) ) {
+					( copyIsArray = Array.isArray( copy ) ) ) ) {
 
 					if ( copyIsArray ) {
 						copyIsArray = false;
-						clone = src && jQuery.isArray( src ) ? src : [];
+						clone = src && Array.isArray( src ) ? src : [];
 
 					} else {
 						clone = src && jQuery.isPlainObject( src ) ? src : {};
@@ -212,10 +212,13 @@ jQuery.extend( {
 	noop: function() {},
 
 	isFunction: function( obj ) {
-		return jQuery.type( obj ) === "function";
-	},
 
-	isArray: Array.isArray,
+		// Support: Chrome <=57, Firefox <=52
+		// In some browsers, typeof returns "function" for HTML <object> elements
+		// (i.e., `typeof document.createElement( "object" ) === "function"`).
+		// We don't want to classify *any* DOM node as a function.
+		return typeof obj === "function" && typeof obj.nodeType !== "number";
+	},
 
 	isWindow: function( obj ) {
 		return obj != null && obj === obj.window;
@@ -285,14 +288,10 @@ jQuery.extend( {
 	},
 
 	// Convert dashed to camelCase; used by the css and data modules
-	// Support: IE <=9 - 11, Edge 12 - 13
+	// Support: IE <=9 - 11, Edge 12 - 15
 	// Microsoft forgot to hump their vendor prefix (#9572)
 	camelCase: function( string ) {
 		return string.replace( rmsPrefix, "ms-" ).replace( rdashAlpha, fcamelCase );
-	},
-
-	nodeName: function( elem, name ) {
-		return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
 	},
 
 	each: function( obj, callback ) {
@@ -470,7 +469,7 @@ function isArrayLike( obj ) {
 	var length = !!obj && "length" in obj && obj.length,
 		type = jQuery.type( obj );
 
-	if ( type === "function" || jQuery.isWindow( obj ) ) {
+	if ( jQuery.isFunction( obj ) || jQuery.isWindow( obj ) ) {
 		return false;
 	}
 
